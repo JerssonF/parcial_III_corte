@@ -14,16 +14,25 @@
         <ion-input v-model="currentItem.nombre"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Cedula</ion-label>
+        <ion-label position="floating">Cédula</ion-label>
         <ion-input v-model="currentItem.cedula"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Telefono</ion-label>
+        <ion-label position="floating">Teléfono</ion-label>
         <ion-input v-model="currentItem.telefono"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Email</ion-label>
         <ion-input v-model="currentItem.email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Fecha de Nacimiento</ion-label>
+        <ion-input 
+          v-model="currentItem.fechaNacimiento" 
+          placeholder="AAAA-MM-DD" 
+          type="text"
+          @blur="validateFechaNacimiento"
+        ></ion-input>
       </ion-item>
     </template>
   </CrudComponent>
@@ -77,7 +86,8 @@ export default {
         cedula: '',
         nombre: '',
         email: '',
-        telefono: ''
+        telefono: '',
+        fechaNacimiento: ''
       },
       clientes: []
     };
@@ -90,22 +100,20 @@ export default {
       try {
         this.clientes = await getAllClientes();
       } catch (error) {
-        console.error('Error al cargar clientes:', error);
         alert('Error al cargar la lista de clientes');
       }
     },
     async saveClientes() {
       try {
         if (this.currentItem.id) {
-          await updateClientes(this.currentItem,this.currentItem.id);
+          await updateClientes(this.currentItem, this.currentItem.id);
         } else {
           await saveClientes(this.currentItem);
         }
         await this.loadClientes();
         this.resetForm();
       } catch (error) {
-        console.error('Error al guardar clientes:', error);
-        alert('Error al guardar el clientes');
+        alert('Error al guardar el cliente');
       }
     },
     async deleteClientes(id) {
@@ -113,16 +121,22 @@ export default {
         await deleteClientes(id);
         await this.loadClientes();
       } catch (error) {
-        console.error('Error al eliminar clientes:', error);
-        alert('Error al eliminar el clientes');
+        alert('Error al eliminar el cliente');
       }
     },
-    editClientes(clientes) {
-      this.currentItem = { ...clientes }; // Copiar los datos de clientes a currentItem
-      this.$refs.crudComponent.openEditModal(); // Llamar al método en CrudComponent para abrir el modal
+    editClientes(cliente) {
+      this.currentItem = { ...cliente };
+      this.$refs.crudComponent.openEditModal();
     },
     resetForm() {
-      this.currentItem = { id: null, cedula: '', nombre: '', email: '', telefono: '' };
+      this.currentItem = { id: null, cedula: '', nombre: '', email: '', telefono: '', fechaNacimiento: '' };
+    },
+    validateFechaNacimiento() {
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!regex.test(this.currentItem.fechaNacimiento)) {
+        alert('La fecha de nacimiento debe estar en el formato AAAA-MM-DD.');
+        this.currentItem.fechaNacimiento = '';
+      }
     }
   }
 };
@@ -138,7 +152,7 @@ export default {
 
 ion-item {
   --padding-start: 16px;
-  --inner-padding-top: 0x; 
+  --inner-padding-top: 0px; 
   --inner-padding-bottom: 0px;
 }
 
