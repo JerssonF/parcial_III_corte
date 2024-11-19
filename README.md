@@ -47,6 +47,7 @@ El atributo **`fechaNacimiento`** fue añadido al modelo `Clientes` para registr
    
    **Evidencia:**
    ![Imagen de Frontend](Biblioteca-Atena-main/img/front.png)
+   ![Imagen de Frontend](Biblioteca-Atena-main/img/frontend.png)
    
 2. **Backend**:
    - Se incluyó el atributo `fechaNacimiento` en la entidad `Clientes`.
